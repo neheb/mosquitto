@@ -27,7 +27,7 @@ Contributors:
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef WIN32
+#ifdef _WIN32
 #  include <winsock2.h>
 #  include <aclapi.h>
 #  include <io.h>
@@ -41,7 +41,7 @@ Contributors:
 
 FILE *mosquitto__fopen(const char *path, const char *mode, bool restrict_read)
 {
-#ifdef WIN32
+#ifdef _WIN32
 	char buf[4096];
 	int rc;
 	rc = ExpandEnvironmentStringsA(path, buf, 4096);

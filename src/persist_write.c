@@ -20,7 +20,7 @@ Contributors:
 
 #ifdef WITH_PERSISTENCE
 
-#ifndef WIN32
+#ifndef _WIN32
 #include <arpa/inet.h>
 #endif
 #include <assert.h>
@@ -325,7 +325,7 @@ int persist__backup(bool shutdown)
 	snprintf(outfile, len, "%s.new", db.config->persistence_filepath);
 	outfile[len] = '\0';
 
-#ifndef WIN32
+#ifndef _WIN32
 	/**
  	*
 	* If a system lost power during the rename operation at the
@@ -382,7 +382,7 @@ int persist__backup(bool shutdown)
 	persist__subs_save_all(db_fptr);
 	persist__retain_save_all(db_fptr);
 
-#ifndef WIN32
+#ifndef _WIN32
 	/**
 	*
 	* Closing a file does not guarantee that the contents are
@@ -410,7 +410,7 @@ int persist__backup(bool shutdown)
 #endif
 	fclose(db_fptr);
 
-#ifdef WIN32
+#ifdef _WIN32
 	if(remove(db.config->persistence_filepath) != 0){
 		if(errno != ENOENT){
 			goto error;

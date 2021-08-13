@@ -24,13 +24,13 @@ Contributors:
 #include <string.h>
 #include <errno.h>
 
-#ifdef WIN32
+#ifdef _WIN32
 #else
 #  include <dirent.h>
 #  include <strings.h>
 #endif
 
-#ifndef WIN32
+#ifndef _WIN32
 #  include <netdb.h>
 #  include <sys/socket.h>
 #else
@@ -38,7 +38,7 @@ Contributors:
 #  include <ws2tcpip.h>
 #endif
 
-#if !defined(WIN32) && !defined(__CYGWIN__)
+#if !defined(_WIN32) && !defined(__CYGWIN__)
 #  include <syslog.h>
 #endif
 
@@ -56,7 +56,7 @@ struct config_recurse {
 	int log_type_set;
 };
 
-#if defined(WIN32) || defined(__CYGWIN__)
+#if defined(_WIN32) || defined(__CYGWIN__)
 #include <windows.h>
 extern SERVICE_STATUS_HANDLE service_handle;
 #endif
@@ -95,7 +95,7 @@ static int conf__attempt_resolve(const char *host, const char *text, unsigned in
 		freeaddrinfo(gai_res);
 	}
 	if(rc != 0){
-#ifndef WIN32
+#ifndef _WIN32
 		if(rc == EAI_SYSTEM){
 			if(errno == ENOENT){
 				log__printf(NULL, log, "%s: Unable to resolve %s %s.", msg, text, host);
@@ -166,7 +166,7 @@ static void config__init_reload(struct mosquitto__config *config)
 	mosquitto__free(config->log_file);
 	config->log_file = NULL;
 
-#if defined(WIN32) || defined(__CYGWIN__)
+#if defined(_WIN32) || defined(__CYGWIN__)
 	if(service_handle){
 		/* This is running as a Windows service. Default to no logging. Using
 		 * stdout/stderr is forbidden because the first clients to connect will
@@ -664,7 +664,7 @@ int config__read(struct mosquitto__config *config, bool reload)
 			len = strlen(config->persistence_location) + strlen(config->persistence_file) + 2;
 			config->persistence_filepath = mosquitto__malloc(len);
 			if(!config->persistence_filepath) return MOSQ_ERR_NOMEM;
-#ifdef WIN32
+#ifdef _WIN32
 			snprintf(config->persistence_filepath, len, "%s\\%s", config->persistence_location, config->persistence_file);
 #else
 			snprintf(config->persistence_filepath, len, "%s/%s", config->persistence_location, config->persistence_file);
@@ -1549,7 +1549,7 @@ static int config__read_file_core(struct mosquitto__config *config, bool reload,
 							log__printf(NULL, MOSQ_LOG_ERR, "Error: Invalid log_dest value (%s).", token);
 							return MOSQ_ERR_INVAL;
 						}
-#if defined(WIN32) || defined(__CYGWIN__)
+#if defined(_WIN32) || defined(__CYGWIN__)
 						if(service_handle){
 							if(cr->log_dest == MQTT3_LOG_STDOUT || cr->log_dest == MQTT3_LOG_STDERR){
 								log__printf(NULL, MOSQ_LOG_ERR, "Error: Cannot log to stdout/stderr when running as a Windows service.");
@@ -1562,7 +1562,7 @@ static int config__read_file_core(struct mosquitto__config *config, bool reload,
 						return MOSQ_ERR_INVAL;
 					}
 				}else if(!strcmp(token, "log_facility")){
-#if defined(WIN32) || defined(__CYGWIN__)
+#if defined(_WIN32) || defined(__CYGWIN__)
 					log__printf(NULL, MOSQ_LOG_WARNING, "Warning: log_facility not supported on Windows.");
 #else
 					if(conf__parse_int(&token, "log_facility", &tmp_int, saveptr)) return MOSQ_ERR_INVAL;
@@ -2190,11 +2190,11 @@ int config__read_file(struct mosquitto__config *config, bool reload, const char 
 	FILE *fptr = NULL;
 	char *buf;
 	int buflen;
-#ifndef WIN32
+#ifndef _WIN32
 	DIR *dir;
 #endif
 
-#ifndef WIN32
+#ifndef _WIN32
 	dir = opendir(file);
 	if(dir){
 		closedir(dir);

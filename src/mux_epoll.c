@@ -21,12 +21,12 @@ Contributors:
 
 #ifdef WITH_EPOLL
 
-#ifndef WIN32
+#ifndef _WIN32
 #  define _GNU_SOURCE
 #endif
 
 #include <assert.h>
-#ifndef WIN32
+#ifndef _WIN32
 #ifdef WITH_EPOLL
 #include <sys/epoll.h>
 #define MAX_EVENTS 1000
@@ -43,7 +43,7 @@ Contributors:
 #include <signal.h>
 #include <stdio.h>
 #include <string.h>
-#ifndef WIN32
+#ifndef _WIN32
 #  include <sys/socket.h>
 #endif
 #include <time.h>
@@ -61,8 +61,8 @@ Contributors:
 #include "time_mosq.h"
 #include "util_mosq.h"
 
-#ifdef WIN32
-#  error "epoll not supported on WIN32"
+#ifdef _WIN32
+#  error "epoll not supported on _WIN32"
 #endif
 
 static void loop_handle_reads_writes(struct mosquitto *context, uint32_t events);
@@ -75,7 +75,7 @@ int mux_epoll__init(struct mosquitto__listener_sock *listensock, int listensock_
 	struct epoll_event ev;
 	int i;
 
-#ifndef WIN32
+#ifndef _WIN32
 	sigemptyset(&my_sigblock);
 	sigaddset(&my_sigblock, SIGINT);
 	sigaddset(&my_sigblock, SIGTERM);

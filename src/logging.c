@@ -20,7 +20,7 @@ Contributors:
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
-#ifndef WIN32
+#ifndef _WIN32
 #include <syslog.h>
 #endif
 #include <time.h>
@@ -40,7 +40,7 @@ Contributors:
 #include "misc_mosq.h"
 #include "util_mosq.h"
 
-#ifdef WIN32
+#ifdef _WIN32
 HANDLE syslog_h;
 #endif
 
@@ -112,7 +112,7 @@ int log__init(struct mosquitto__config *config)
 	log_destinations = config->log_dest;
 
 	if(log_destinations & MQTT3_LOG_SYSLOG){
-#ifndef WIN32
+#ifndef _WIN32
 		openlog("mosquitto", LOG_PID|LOG_CONS, config->log_facility);
 #else
 		syslog_h = OpenEventLog(NULL, "mosquitto");
@@ -142,7 +142,7 @@ int log__init(struct mosquitto__config *config)
 int log__close(struct mosquitto__config *config)
 {
 	if(log_destinations & MQTT3_LOG_SYSLOG){
-#ifndef WIN32
+#ifndef _WIN32
 		closelog();
 #else
 		CloseEventLog(syslog_h);
@@ -193,7 +193,7 @@ static int log__vprintf(unsigned int priority, const char *fmt, va_list va)
 	int syslog_priority;
 	char log_line[1000];
 	size_t log_line_pos;
-#ifdef WIN32
+#ifdef _WIN32
 	char *sp;
 #endif
 	bool log_timestamp = true;
@@ -210,7 +210,7 @@ static int log__vprintf(unsigned int priority, const char *fmt, va_list va)
 		switch(priority){
 			case MOSQ_LOG_SUBSCRIBE:
 				topic = "$SYS/broker/log/M/subscribe";
-#ifndef WIN32
+#ifndef _WIN32
 				syslog_priority = LOG_NOTICE;
 #else
 				syslog_priority = EVENTLOG_INFORMATION_TYPE;
@@ -218,7 +218,7 @@ static int log__vprintf(unsigned int priority, const char *fmt, va_list va)
 				break;
 			case MOSQ_LOG_UNSUBSCRIBE:
 				topic = "$SYS/broker/log/M/unsubscribe";
-#ifndef WIN32
+#ifndef _WIN32
 				syslog_priority = LOG_NOTICE;
 #else
 				syslog_priority = EVENTLOG_INFORMATION_TYPE;
@@ -226,7 +226,7 @@ static int log__vprintf(unsigned int priority, const char *fmt, va_list va)
 				break;
 			case MOSQ_LOG_DEBUG:
 				topic = "$SYS/broker/log/D";
-#ifndef WIN32
+#ifndef _WIN32
 				syslog_priority = LOG_DEBUG;
 #else
 				syslog_priority = EVENTLOG_INFORMATION_TYPE;
@@ -234,7 +234,7 @@ static int log__vprintf(unsigned int priority, const char *fmt, va_list va)
 				break;
 			case MOSQ_LOG_ERR:
 				topic = "$SYS/broker/log/E";
-#ifndef WIN32
+#ifndef _WIN32
 				syslog_priority = LOG_ERR;
 #else
 				syslog_priority = EVENTLOG_ERROR_TYPE;
@@ -242,7 +242,7 @@ static int log__vprintf(unsigned int priority, const char *fmt, va_list va)
 				break;
 			case MOSQ_LOG_WARNING:
 				topic = "$SYS/broker/log/W";
-#ifndef WIN32
+#ifndef _WIN32
 				syslog_priority = LOG_WARNING;
 #else
 				syslog_priority = EVENTLOG_WARNING_TYPE;
@@ -250,7 +250,7 @@ static int log__vprintf(unsigned int priority, const char *fmt, va_list va)
 				break;
 			case MOSQ_LOG_NOTICE:
 				topic = "$SYS/broker/log/N";
-#ifndef WIN32
+#ifndef _WIN32
 				syslog_priority = LOG_NOTICE;
 #else
 				syslog_priority = EVENTLOG_INFORMATION_TYPE;
@@ -258,7 +258,7 @@ static int log__vprintf(unsigned int priority, const char *fmt, va_list va)
 				break;
 			case MOSQ_LOG_INFO:
 				topic = "$SYS/broker/log/I";
-#ifndef WIN32
+#ifndef _WIN32
 				syslog_priority = LOG_INFO;
 #else
 				syslog_priority = EVENTLOG_INFORMATION_TYPE;
@@ -267,7 +267,7 @@ static int log__vprintf(unsigned int priority, const char *fmt, va_list va)
 #ifdef WITH_WEBSOCKETS
 			case MOSQ_LOG_WEBSOCKETS:
 				topic = "$SYS/broker/log/WS";
-#ifndef WIN32
+#ifndef _WIN32
 				syslog_priority = LOG_DEBUG;
 #else
 				syslog_priority = EVENTLOG_INFORMATION_TYPE;
@@ -276,7 +276,7 @@ static int log__vprintf(unsigned int priority, const char *fmt, va_list va)
 #endif
 			default:
 				topic = "$SYS/broker/log/E";
-#ifndef WIN32
+#ifndef _WIN32
 				syslog_priority = LOG_ERR;
 #else
 				syslog_priority = EVENTLOG_ERROR_TYPE;
@@ -313,13 +313,13 @@ static int log__vprintf(unsigned int priority, const char *fmt, va_list va)
 		}
 		if(log_destinations & MQTT3_LOG_FILE && log_fptr){
 			fprintf(log_fptr, "%s\n", log_line);
-#ifdef WIN32
+#ifdef _WIN32
 			/* Windows doesn't support line buffering, so flush. */
 			fflush(log_fptr);
 #endif
 		}
 		if(log_destinations & MQTT3_LOG_SYSLOG){
-#ifndef WIN32
+#ifndef _WIN32
 			syslog(syslog_priority, "%s", log_line);
 #else
 			sp = (char *)log_line;
@@ -368,7 +368,7 @@ void log__internal(const char *fmt, ...)
 		return;
 	}
 
-#ifdef WIN32
+#ifdef _WIN32
 	log__printf(NULL, MOSQ_LOG_INTERNAL, "%s", buf);
 #else
 	log__printf(NULL, MOSQ_LOG_INTERNAL, "%s%s%s", "\e[32m", buf, "\e[0m");

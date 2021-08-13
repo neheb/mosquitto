@@ -20,7 +20,7 @@ Contributors:
 
 #ifdef WITH_PERSISTENCE
 
-#ifndef WIN32
+#ifndef _WIN32
 #include <arpa/inet.h>
 #endif
 #include <assert.h>

@@ -18,7 +18,7 @@ Contributors:
 
 #include "config.h"
 
-#ifndef WIN32
+#ifndef _WIN32
 #include <netdb.h>
 #include <unistd.h>
 #include <arpa/inet.h>
@@ -94,7 +94,7 @@ static void net__print_error(unsigned int log, const char *format_str)
 {
 	char *buf;
 
-#ifdef WIN32
+#ifdef _WIN32
 	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
 			NULL, WSAGetLastError(), LANG_NEUTRAL, (LPTSTR)&buf, 0, NULL);
 
@@ -124,7 +124,7 @@ struct mosquitto *net__socket_accept(struct mosquitto__listener_sock *listensock
 
 	new_sock = accept(listensock->sock, NULL, 0);
 	if(new_sock == INVALID_SOCKET){
-#ifdef WIN32
+#ifdef _WIN32
 		errno = WSAGetLastError();
 		if(errno == WSAEMFILE){
 #else
@@ -173,7 +173,7 @@ struct mosquitto *net__socket_accept(struct mosquitto__listener_sock *listensock
 
 	if(db.config->set_tcp_nodelay){
 		int flag = 1;
-#ifdef WIN32
+#ifdef _WIN32
 			if (setsockopt(new_sock, IPPROTO_TCP, TCP_NODELAY, (char *)&flag, sizeof(int)) != 0) {
 #else
 		if(setsockopt(new_sock, IPPROTO_TCP, TCP_NODELAY, &flag, sizeof(int)) != 0){
@@ -600,7 +600,7 @@ int net__tls_load_verify(struct mosquitto__listener *listener)
 }
 
 
-#ifndef WIN32
+#ifndef _WIN32
 static int net__bind_interface(struct mosquitto__listener *listener, struct addrinfo *rp)
 {
 	/*
@@ -675,7 +675,7 @@ static int net__socket_listen_tcp(struct mosquitto__listener *listener)
 	char service[10];
 	int rc;
 	int ss_opt = 1;
-#ifndef WIN32
+#ifndef _WIN32
 	bool interface_bound = false;
 #endif
 
@@ -724,7 +724,7 @@ static int net__socket_listen_tcp(struct mosquitto__listener *listener)
 		}
 		listener->socks[listener->sock_count-1] = sock;
 
-#ifndef WIN32
+#ifndef _WIN32
 		ss_opt = 1;
 		/* Unimportant if this fails */
 		(void)setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &ss_opt, sizeof(ss_opt));
@@ -740,7 +740,7 @@ static int net__socket_listen_tcp(struct mosquitto__listener *listener)
 			return 1;
 		}
 
-#ifndef WIN32
+#ifndef _WIN32
 		if(listener->bind_interface){
 			/* It might be possible that an interface does not support all relevant sa_families.
 			 * We should successfully find at least one. */
@@ -777,7 +777,7 @@ static int net__socket_listen_tcp(struct mosquitto__listener *listener)
 	}
 	freeaddrinfo(ainfo);
 
-#ifndef WIN32
+#ifndef _WIN32
 	if(listener->bind_interface && !interface_bound){
 		mosquitto__free(listener->socks);
 		return 1;

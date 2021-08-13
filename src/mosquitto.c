@@ -18,14 +18,14 @@ Contributors:
 
 #include "config.h"
 
-#ifndef WIN32
+#ifndef _WIN32
 /* For initgroups() */
 #  include <unistd.h>
 #  include <grp.h>
 #  include <assert.h>
 #endif
 
-#ifndef WIN32
+#ifndef _WIN32
 #include <pwd.h>
 #else
 #include <process.h>
@@ -33,7 +33,7 @@ Contributors:
 #include <ws2tcpip.h>
 #endif
 
-#ifndef WIN32
+#ifndef _WIN32
 #  include <sys/time.h>
 #endif
 
@@ -84,7 +84,7 @@ int deny_severity = LOG_INFO;
  */
 int drop_privileges(struct mosquitto__config *config)
 {
-#if !defined(__CYGWIN__) && !defined(WIN32)
+#if !defined(__CYGWIN__) && !defined(_WIN32)
 	struct passwd *pwd;
 	char *err;
 	int rc;
@@ -141,7 +141,7 @@ int drop_privileges(struct mosquitto__config *config)
 
 static void mosquitto__daemonise(void)
 {
-#ifndef WIN32
+#ifndef _WIN32
 	char *err;
 	pid_t pid;
 
@@ -407,12 +407,12 @@ static void signal__setup(void)
 #ifdef SIGHUP
 	signal(SIGHUP, handle_sighup);
 #endif
-#ifndef WIN32
+#ifndef _WIN32
 	signal(SIGUSR1, handle_sigusr1);
 	signal(SIGUSR2, handle_sigusr2);
 	signal(SIGPIPE, SIG_IGN);
 #endif
-#ifdef WIN32
+#ifdef _WIN32
 	CreateThread(NULL, 0, SigThreadProc, NULL, 0, NULL);
 #endif
 }
@@ -443,14 +443,14 @@ int main(int argc, char *argv[])
 	int i;
 #endif
 	int rc;
-#ifdef WIN32
+#ifdef _WIN32
 	SYSTEMTIME st;
 #else
 	struct timeval tv;
 #endif
 	struct mosquitto *ctxt, *ctxt_tmp;
 
-#if defined(WIN32) || defined(__CYGWIN__)
+#if defined(_WIN32) || defined(__CYGWIN__)
 	if(argc == 2){
 		if(!strcmp(argv[1], "run")){
 			service_run();
@@ -466,7 +466,7 @@ int main(int argc, char *argv[])
 #endif
 
 
-#ifdef WIN32
+#ifdef _WIN32
 	GetSystemTime(&st);
 	srand(st.wSecond + st.wMilliseconds);
 #else
@@ -474,7 +474,7 @@ int main(int argc, char *argv[])
 	srand((unsigned int)(tv.tv_sec + tv.tv_usec));
 #endif
 
-#ifdef WIN32
+#ifdef _WIN32
 	_setmaxstdio(2048);
 #endif
 
@@ -614,7 +614,7 @@ int main(int argc, char *argv[])
 	return rc;
 }
 
-#ifdef WIN32
+#ifdef _WIN32
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	char **argv;

@@ -33,7 +33,7 @@ Contributors:
 #include <errno.h>
 #include <sys/stat.h>
 
-#ifndef WIN32
+#ifndef _WIN32
 #  include <sys/socket.h>
 #endif
 
@@ -414,7 +414,7 @@ static char *http__canonical_filename(
 
 
 	/* Get canonical path and check it is within our http_dir */
-#ifdef WIN32
+#ifdef _WIN32
 	filename_canonical = _fullpath(NULL, filename, 0);
 	mosquitto__free(filename);
 	if(!filename_canonical){
@@ -718,7 +718,7 @@ void mosq_websockets_init(struct mosquitto__listener *listener, const struct mos
 	}
 
 	if(listener->http_dir){
-#ifdef WIN32
+#ifdef _WIN32
 		user->http_dir = _fullpath(NULL, listener->http_dir, 0);
 #else
 		user->http_dir = realpath(listener->http_dir, NULL);

@@ -21,7 +21,7 @@ Contributors:
 #include <errno.h>
 #include <string.h>
 #include <limits.h>
-#ifdef WIN32
+#ifdef _WIN32
 #  include <ws2tcpip.h>
 #elif defined(__QNX__)
 #  include <sys/socket.h>
@@ -275,7 +275,7 @@ int socks5__read(struct mosquitto *mosq)
 				mosq->in_packet.pos += (uint32_t)len;
 				mosq->in_packet.to_process -= (uint32_t)len;
 			}else{
-#ifdef WIN32
+#ifdef _WIN32
 				errno = WSAGetLastError();
 #endif
 				if(errno == EAGAIN || errno == COMPAT_EWOULDBLOCK){
@@ -317,7 +317,7 @@ int socks5__read(struct mosquitto *mosq)
 				mosq->in_packet.pos += (uint32_t)len;
 				mosq->in_packet.to_process -= (uint32_t)len;
 			}else{
-#ifdef WIN32
+#ifdef _WIN32
 				errno = WSAGetLastError();
 #endif
 				if(errno == EAGAIN || errno == COMPAT_EWOULDBLOCK){
@@ -373,7 +373,7 @@ int socks5__read(struct mosquitto *mosq)
 				mosq->in_packet.pos += (uint32_t)len;
 				mosq->in_packet.to_process -= (uint32_t)len;
 			}else{
-#ifdef WIN32
+#ifdef _WIN32
 				errno = WSAGetLastError();
 #endif
 				if(errno == EAGAIN || errno == COMPAT_EWOULDBLOCK){

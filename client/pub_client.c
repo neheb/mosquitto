@@ -23,7 +23,7 @@ Contributors:
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#ifndef WIN32
+#ifndef _WIN32
 #include <sys/time.h>
 #include <time.h>
 #else
@@ -50,7 +50,7 @@ static bool ready_for_repeat = false;
 static volatile int status = STATUS_CONNECTING;
 static int connack_result = 0;
 
-#ifdef WIN32
+#ifdef _WIN32
 static uint64_t next_publish_tv;
 
 static void set_repeat_time(void)
@@ -245,7 +245,7 @@ static int pub_stdin_line_loop(struct mosquitto *mosq)
 	stdin_finished = false;
 	do{
 		if(status == STATUS_CONNECTING){
-#ifdef WIN32
+#ifdef _WIN32
 			Sleep(100);
 #else
 			struct timespec ts;
@@ -312,7 +312,7 @@ static int pub_stdin_line_loop(struct mosquitto *mosq)
 				mosquitto_disconnect_v5(mosq, 0, cfg.disconnect_props);
 				disconnect_sent = true;
 			}
-#ifdef WIN32
+#ifdef _WIN32
 			Sleep(100);
 #else
 			struct timespec ts;

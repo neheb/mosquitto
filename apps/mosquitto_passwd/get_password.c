@@ -23,7 +23,7 @@ Contributors:
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef WIN32
+#ifdef _WIN32
 #  include <windows.h>
 #  include <process.h>
 #   define snprintf sprintf_s
@@ -42,7 +42,7 @@ Contributors:
 
 void get_password__reset_term(void)
 {
-#ifndef WIN32
+#ifndef _WIN32
 	struct termios ts;
 
 	tcgetattr(0, &ts);
@@ -54,7 +54,7 @@ void get_password__reset_term(void)
 
 static int gets_quiet(char *s, int len)
 {
-#ifdef WIN32
+#ifdef _WIN32
 	HANDLE h;
 	DWORD con_orig, con_quiet = 0;
 	DWORD read_len = 0;

@@ -23,7 +23,7 @@ Contributors:
 #include <stdio.h>
 #include <string.h>
 
-#ifndef WIN32
+#ifndef _WIN32
 #include <netdb.h>
 #include <sys/socket.h>
 #else
@@ -31,7 +31,7 @@ Contributors:
 #include <ws2tcpip.h>
 #endif
 
-#ifndef WIN32
+#ifndef _WIN32
 #include <unistd.h>
 #else
 #include <process.h>

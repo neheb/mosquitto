@@ -34,7 +34,7 @@ Contributors:
 #include "mosquitto_broker.h"
 #include "password_mosq.h"
 
-#ifdef WIN32
+#ifdef _WIN32
 #  include <windows.h>
 #  include <process.h>
 #	ifndef __cplusplus

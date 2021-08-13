@@ -19,13 +19,13 @@ Contributors:
 #ifndef LIB_LOAD_H
 #define LIB_LOAD_H
 
-#ifdef WIN32
+#ifdef _WIN32
 #	include <windows.h>
 #else
 #	include <dlfcn.h>
 #endif
 
-#ifdef WIN32
+#ifdef _WIN32
 #	define LIB_LOAD(A) LoadLibrary(A)
 #	define LIB_CLOSE(A) FreeLibrary(A)
 #	define LIB_SYM(HANDLE, SYM) GetProcAddress(HANDLE, SYM)

@@ -16,7 +16,7 @@ Contributors:
    Roger Light - initial implementation and documentation.
 */
 
-#if defined(WIN32) || defined(__CYGWIN__)
+#if defined(_WIN32) || defined(__CYGWIN__)
 
 #include "config.h"
 
@@ -90,10 +90,10 @@ void __stdcall service_main(DWORD dwArgc, LPTSTR *lpszArgv)
 		argv[2] = conf_path;
 		argc = 3;
 
-		service_status.dwServiceType = SERVICE_WIN32_OWN_PROCESS;
+		service_status.dwServiceType = SERVICE__WIN32_OWN_PROCESS;
 		service_status.dwCurrentState = SERVICE_RUNNING;
 		service_status.dwControlsAccepted = SERVICE_ACCEPT_SHUTDOWN | SERVICE_ACCEPT_STOP;
-		service_status.dwWin32ExitCode = NO_ERROR;
+		service_status.dw_WIN32ExitCode = NO_ERROR;
 		service_status.dwCheckPoint = 0;
 		SetServiceStatus(service_handle, &service_status);
 
@@ -123,7 +123,7 @@ void service_install(void)
 	if(sc_manager){
 		svc_handle = CreateService(sc_manager, "mosquitto", "Mosquitto Broker", 
 				SERVICE_START | SERVICE_STOP | SERVICE_CHANGE_CONFIG,
-				SERVICE_WIN32_OWN_PROCESS, SERVICE_AUTO_START, SERVICE_ERROR_NORMAL,
+				SERVICE__WIN32_OWN_PROCESS, SERVICE_AUTO_START, SERVICE_ERROR_NORMAL,
 				service_string, NULL, NULL, NULL, NULL, NULL);
 
 		if(svc_handle){

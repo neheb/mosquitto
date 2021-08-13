@@ -19,12 +19,12 @@ Contributors:
 
 #include "config.h"
 
-#ifndef WIN32
+#ifndef _WIN32
 #  define _GNU_SOURCE
 #endif
 
 #include <assert.h>
-#ifndef WIN32
+#ifndef _WIN32
 #include <unistd.h>
 #else
 #include <process.h>
@@ -36,7 +36,7 @@ Contributors:
 #include <signal.h>
 #include <stdio.h>
 #include <string.h>
-#ifndef WIN32
+#ifndef _WIN32
 #  include <sys/socket.h>
 #endif
 #include <time.h>

@@ -25,12 +25,12 @@ Contributors:
 #include <string.h>
 #include <errno.h>
 
-#ifdef WIN32
+#ifdef _WIN32
 #else
 #  include <dirent.h>
 #endif
 
-#ifndef WIN32
+#ifndef _WIN32
 #  include <strings.h>
 #  include <netdb.h>
 #  include <sys/socket.h>
@@ -39,7 +39,7 @@ Contributors:
 #  include <ws2tcpip.h>
 #endif
 
-#if !defined(WIN32) && !defined(__CYGWIN__) && !defined(__QNX__)
+#if !defined(_WIN32) && !defined(__CYGWIN__) && !defined(__QNX__)
 #  include <sys/syslog.h>
 #endif
 
@@ -76,7 +76,7 @@ static int scmp_p(const void *p1, const void *p2)
 	return s1[0] - s2[0];
 }
 
-#ifdef WIN32
+#ifdef _WIN32
 int config__get_dir_files(const char *include_dir, char ***files, int *file_count)
 {
 	size_t len;
@@ -87,7 +87,7 @@ int config__get_dir_files(const char *include_dir, char ***files, int *file_coun
 
 	HANDLE fh;
 	char dirpath[MAX_PATH];
-	WIN32_FIND_DATA find_data;
+	_WIN32_FIND_DATA find_data;
 
 	snprintf(dirpath, MAX_PATH, "%s\\*.conf", include_dir);
 	fh = FindFirstFile(dirpath, &find_data);
@@ -137,7 +137,7 @@ int config__get_dir_files(const char *include_dir, char ***files, int *file_coun
 #endif
 
 
-#ifndef WIN32
+#ifndef _WIN32
 
 int config__get_dir_files(const char *include_dir, char ***files, int *file_count)
 {

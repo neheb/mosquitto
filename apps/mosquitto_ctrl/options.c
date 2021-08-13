@@ -24,7 +24,7 @@ Contributors:
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#ifndef WIN32
+#ifndef _WIN32
 #include <unistd.h>
 #include <strings.h>
 #else
@@ -457,14 +457,14 @@ static char *get_default_cfg_location(void)
 {
 	char *loc = NULL;
 	size_t len;
-#ifndef WIN32
+#ifndef _WIN32
 	char *env;
 #else
 	char env[1024];
 	int rc;
 #endif
 
-#ifndef WIN32
+#ifndef _WIN32
 	env = getenv("XDG_CONFIG_HOME");
 	if(env){
 		len = strlen(env) + strlen("/mosquitto_ctrl") + 1;
@@ -657,7 +657,7 @@ int client_opts_set(struct mosquitto *mosq, struct mosq_config *cfg)
 
 int client_connect(struct mosquitto *mosq, struct mosq_config *cfg)
 {
-#ifndef WIN32
+#ifndef _WIN32
 	char *err;
 #else
 	char err[1024];
@@ -685,7 +685,7 @@ int client_connect(struct mosquitto *mosq, struct mosq_config *cfg)
 	rc = mosquitto_connect_bind_v5(mosq, cfg->host, port, 60, cfg->bind_address, NULL);
 	if(rc>0){
 		if(rc == MOSQ_ERR_ERRNO){
-#ifndef WIN32
+#ifndef _WIN32
 			err = strerror(errno);
 #else
 			FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, errno, 0, (LPTSTR)&err, 1024, NULL);

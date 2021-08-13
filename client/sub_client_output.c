@@ -18,7 +18,7 @@ Contributors:
 
 #include "config.h"
 
-#ifdef WIN32
+#ifdef _WIN32
    /* For rand_s on Windows */
 #  define _CRT_RAND_S
 #endif
@@ -29,7 +29,7 @@ Contributors:
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#ifndef WIN32
+#ifndef _WIN32
 #include <unistd.h>
 #else
 #include <process.h>
@@ -54,7 +54,7 @@ extern struct mosq_config cfg;
 
 static int get_time(struct tm **ti, long *ns)
 {
-#ifdef WIN32
+#ifdef _WIN32
 	SYSTEMTIME st;
 #elif defined(__APPLE__)
 	struct timeval tv;
@@ -63,7 +63,7 @@ static int get_time(struct tm **ti, long *ns)
 #endif
 	time_t s;
 
-#ifdef WIN32
+#ifdef _WIN32
 	s = time(NULL);
 
 	GetLocalTime(&st);
@@ -766,7 +766,7 @@ static void formatted_print(const struct mosq_config *lcfg, const struct mosquit
 
 void rand_init(void)
 {
-#ifndef WIN32
+#ifndef _WIN32
 	struct tm *ti = NULL;
 	long ns;
 
@@ -779,14 +779,14 @@ void rand_init(void)
 
 void print_message(struct mosq_config *lcfg, const struct mosquitto_message *message, const mosquitto_property *properties)
 {
-#ifdef WIN32
+#ifdef _WIN32
 	unsigned int r = 0;
 #else
 	long r = 0;
 #endif
 
 	if(lcfg->random_filter < 10000){
-#ifdef WIN32
+#ifdef _WIN32
 		rand_s(&r);
 #else
 		r = random();

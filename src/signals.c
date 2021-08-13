@@ -16,9 +16,9 @@ Contributors:
    Roger Light - initial implementation and documentation.
    Dmitry Kaukov - windows named events implementation.
 */
-#ifdef WIN32
-#  ifndef WIN32_LEAN_AND_MEAN
-#    define WIN32_LEAN_AND_MEAN
+#ifdef _WIN32
+#  ifndef _WIN32_LEAN_AND_MEAN
+#    define _WIN32_LEAN_AND_MEAN
 #  endif
 #  include <windows.h>
 #endif
@@ -76,7 +76,7 @@ void handle_sigusr2(int signal)
 
 /*
  *
- * Signalling mosquitto process on Win32.
+ * Signalling mosquitto process on _WIN32.
  *
  *  On Windows we we can use named events to pass signals to the mosquitto process.
  *  List of events :
@@ -87,7 +87,7 @@ void handle_sigusr2(int signal)
  *
  * (where PID is the PID of the mosquitto process).
  */
-#ifdef WIN32
+#ifdef _WIN32
 DWORD WINAPI SigThreadProc(void* data)
 {
 	TCHAR evt_name[MAX_PATH];

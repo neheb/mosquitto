@@ -24,7 +24,7 @@ Contributors:
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#ifndef WIN32
+#ifndef _WIN32
 #include <unistd.h>
 #include <signal.h>
 #else
@@ -47,7 +47,7 @@ static bool timed_out = false;
 static int connack_result = 0;
 bool connack_received = false;
 
-#ifndef WIN32
+#ifndef _WIN32
 static void my_signal_handler(int signum)
 {
 	if(signum == SIGALRM || signum == SIGTERM || signum == SIGINT){
@@ -196,7 +196,7 @@ static void print_usage(void)
 	printf("                     [-c] [-k keepalive] [-q qos] [-x session-expiry-interval]\n");
 	printf("                     [-C msg_count] [-E] [-R] [--retained-only] [--remove-retained] [-T filter_out] [-U topic ...]\n");
 	printf("                     [-F format]\n");
-#ifndef WIN32
+#ifndef _WIN32
 	printf("                     [-W timeout_secs]\n");
 #endif
 #ifdef WITH_SRV
@@ -256,7 +256,7 @@ static void print_usage(void)
 	printf(" -v : print published messages verbosely.\n");
 	printf(" -V : specify the version of the MQTT protocol to use when connecting.\n");
 	printf("      Can be mqttv5, mqttv311 or mqttv31. Defaults to mqttv311.\n");
-#ifndef WIN32
+#ifndef _WIN32
 	printf(" -W : Specifies a timeout in seconds how long to process incoming MQTT messages.\n");
 #endif
 	printf(" -x : Set the session-expiry-interval property on the CONNECT packet. Applies to MQTT v5\n");
@@ -318,7 +318,7 @@ static void print_usage(void)
 int main(int argc, char *argv[])
 {
 	int rc;
-#ifndef WIN32
+#ifndef _WIN32
 		struct sigaction sigact;
 #endif
 
@@ -376,7 +376,7 @@ int main(int argc, char *argv[])
 		goto cleanup;
 	}
 
-#ifndef WIN32
+#ifndef _WIN32
 	sigact.sa_handler = my_signal_handler;
 	sigemptyset(&sigact.sa_mask);
 	sigact.sa_flags = 0;

@@ -24,7 +24,7 @@ Contributors:
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#ifndef WIN32
+#ifndef _WIN32
 #include <unistd.h>
 #include <strings.h>
 #else
@@ -134,7 +134,7 @@ static int check_format(const char *str)
 					/* JSON output, assuming JSON payload */
 				}else if(str[i+1] == 'U'){
 					/* Unix time+nanoseconds */
-#ifdef WIN32
+#ifdef _WIN32
 					fprintf(stderr, "Error: The %%U format option is not supported on Windows.\n");
 					return 1;
 #endif
@@ -277,7 +277,7 @@ int client_config_load(struct mosq_config *cfg, int pub_or_sub, int argc, char *
 	size_t len;
 	char *args[3];
 
-#ifndef WIN32
+#ifndef _WIN32
 	char *env;
 #else
 	char env[1024];
@@ -287,7 +287,7 @@ int client_config_load(struct mosq_config *cfg, int pub_or_sub, int argc, char *
 	init_config(cfg, pub_or_sub);
 
 	/* Default config file */
-#ifndef WIN32
+#ifndef _WIN32
 	env = getenv("XDG_CONFIG_HOME");
 	if(env){
 		len = strlen(env) + strlen("/mosquitto_pub") + 1;
@@ -1349,7 +1349,7 @@ int client_id_generate(struct mosq_config *cfg)
 
 int client_connect(struct mosquitto *mosq, struct mosq_config *cfg)
 {
-#ifndef WIN32
+#ifndef _WIN32
 	char *err;
 #else
 	char err[1024];
@@ -1385,7 +1385,7 @@ int client_connect(struct mosquitto *mosq, struct mosq_config *cfg)
 #endif
 	if(rc>0){
 		if(rc == MOSQ_ERR_ERRNO){
-#ifndef WIN32
+#ifndef _WIN32
 			err = strerror(errno);
 #else
 			FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, errno, 0, (LPTSTR)&err, 1024, NULL);

@@ -30,7 +30,7 @@ Contributors:
 #include "get_password.h"
 #include "password_mosq.h"
 
-#ifdef WIN32
+#ifdef _WIN32
 #  include <windows.h>
 #  include <process.h>
 #	ifndef __cplusplus
@@ -67,7 +67,7 @@ struct cb_helper {
 
 static enum mosquitto_pwhash_type hashtype = pw_sha512_pbkdf2;
 
-#ifdef WIN32
+#ifdef _WIN32
 static FILE *mpw_tmpfile(void)
 {
 	return tmpfile();
@@ -342,7 +342,7 @@ static int copy_contents(FILE *src, FILE *dest)
 	rewind(src);
 	rewind(dest);
 	
-#ifdef WIN32
+#ifdef _WIN32
 	_chsize(fileno(dest), 0);
 #else
 	if(ftruncate(fileno(dest), 0)) return 1;
@@ -559,7 +559,7 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-#ifdef WIN32
+#ifdef _WIN32
 	password_file = _fullpath(NULL, password_file_tmp, 0);
 	if(!password_file){
 		fprintf(stderr, "Error getting full path for password file.\n");
